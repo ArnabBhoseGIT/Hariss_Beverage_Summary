@@ -1,0 +1,38 @@
+<core:FragmentDefinition xmlns:html="http://www.w3.org/1999/xhtml" xmlns:mvc="sap.ui.core.mvc" displayBlock="true" xmlns="sap.m"
+	xmlns:fb="sap.ui.comp.filterbar" xmlns:core="sap.ui.core" class="sapUiSizeCompact" xmlns:f="sap.f" xmlns:l="sap.ui.layout">
+	<fb:FilterBar id="filterbar" persistencyKey="myPersKey" useToolbar="false" search="onSearch" filterChange="onFilterChange"
+		afterVariantLoad="onAfterVariantLoad">
+		<fb:filterItems>
+			<fb:FilterItem name="Plant" label="Plant" mandatory="true" class="sapUiSizeCompact">
+				<fb:control>
+					<!--	, sorter: { path: 'Name1' }-->
+					<MultiComboBox id="combobox1" showSecondaryValues="true" items="{ path: 'PlantModel>/' }" selectionChange="onWerksChange"
+						selectionFinish="onSelectFinish" class="sapUiSizeCompact">
+						<core:ListItem key="{PlantModel>Werks}" text="{PlantModel>Name1}" additionalText="{PlantModel>Werks}"/>
+					</MultiComboBox>
+				</fb:control>
+			</fb:FilterItem>
+			<fb:FilterItem name="Period From" label="Period From" mandatory="true" class="sapUiSizeCompact">
+				<fb:control>
+					<DatePicker id="DP1" placeholder="Enter From Date" displayFormat="YYYY" valueFormat="YYYY" change="handleFromYearChange"
+						class="sapUiSizeCompact"/>
+				</fb:control>
+			</fb:FilterItem>
+			<fb:FilterItem name="Period To" label="Period To" mandatory="true" class="sapUiSizeCompact">
+				<fb:control>
+					<DatePicker id="DP2" placeholder="Enter To Date" displayFormat="YYYY" valueFormat="YYYY" change="handleChange" class="sapUiSizeCompact"/>
+				</fb:control>
+			</fb:FilterItem>
+			<fb:FilterItem name="Time Period" label="Time Period" mandatory="true" class="sapUiSizeCompact">
+				<fb:control>
+					<ComboBox id="combo2" class="sapUiSizeCompact" selectedKey="YR" selectionChange="onSelectFinish">
+						<core:Item key="YR" text="Yearly"/>
+						<core:Item key="6M" text="Half Yearly"/>
+						<core:Item key="QT" text="Quarterly"/>
+						<core:Item key="MT" text="Monthly"/>
+					</ComboBox>
+				</fb:control>
+			</fb:FilterItem>
+		</fb:filterItems>
+	</fb:FilterBar>
+</core:FragmentDefinition>

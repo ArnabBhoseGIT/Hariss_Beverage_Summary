@@ -1,0 +1,419 @@
+<mvc:View controllerName="com.hariss.dpbs.DailyProductionBeverageSummaryFinal.controller.Worklist" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m"
+	xmlns:f="sap.f" xmlns:card="sap.f.cards" xmlns:core="sap.ui.core" displayBlock="true" height="100%" xmlns:viz="sap.viz.ui5.controls"
+	xmlns:layout="sap.ui.layout" xmlns:C="sap.suite.ui.commons" xmlns:uxap="sap.uxap" xmlns:viz.feeds="sap.viz.ui5.controls.common.feeds"
+	xmlns:viz.data="sap.viz.ui5.data">
+	<App id="app">
+		<pages>
+			<uxap:ObjectPageLayout id="ObjectPageLayout" showTitleInHeaderContent="true" showEditHeaderButton="true"
+				editHeaderButtonPress="handleEditBtnPress" upperCaseAnchorBar="false">
+				<uxap:headerTitle>
+					<uxap:ObjectPageDynamicHeaderTitle>
+						<!--	<uxap:expandedHeading>
+							<HBox>
+								<Title text="{bevModel2Name>/0/Year1}" wrapping="true"/>
+							</HBox>
+						</uxap:expandedHeading>
+						<uxap:snappedHeading>
+							<FlexBox fitContainer="true" alignItems="Center">
+								<Title text="{i18n>title}" wrapping="true"/>
+							</FlexBox>
+						</uxap:snappedHeading>-->
+					</uxap:ObjectPageDynamicHeaderTitle>
+				</uxap:headerTitle>
+				<uxap:headerContent>
+					<core:Fragment fragmentName="com.hariss.dpbs.DailyProductionBeverageSummaryFinal.view.fragments.Header" type="XML"/>
+				</uxap:headerContent>
+				<uxap:sections>
+					<uxap:ObjectPageSection showTitle="false" id="goalsSection">
+						<uxap:subSections>
+							<uxap:ObjectPageSubSection id="goalsSectionSS1">
+								<f:Card class="sapUiSmallMargin">
+									<f:header>
+										<card:Header title="Prod Qty Analytics"/>
+									</f:header>
+									<f:content>
+										<layout:Splitter width="100%" height="100%">
+											<layout:contentAreas>
+												<C:ChartContainer id="chartContainer" showFullScreen="true" showPersonalization="false" autoAdjustHeight="true" showZoom="false"
+													showLegendButton="true" personalizationPress="attachPersonalizationPress" contentChange="attachContentChange">
+													<C:content>
+														<C:ChartContainerContent icon="sap-icon://column-chart" validateFieldGroup="_TableNav">
+															<C:content>
+																<!--	<viz:VizFrame id="idVizFrame" uiConfig="{applicationSet:'fiori'}" height='100%' width="100%" vizType='column'>
+																	<viz:dataset>
+																		<viz.data:FlattenedDataset data="{bevModel2Name>/}">
+																			<viz.data:dimensions>
+																				<viz.data:DimensionDefinition name="Week" value="{bevModel2Name>Week}"/>
+																			</viz.data:dimensions>
+																			<viz.data:measures>
+																				<viz.data:MeasureDefinition name="Revenue" value="{bevModel2Name>Revenue}"/>
+																				<viz.data:MeasureDefinition name="Cost" value="{bevModel2Name>Cost}"/>
+																			</viz.data:measures>
+																		</viz.data:FlattenedDataset>
+																	</viz:dataset>
+																	<viz:feeds>
+																		<viz.feeds:FeedItem id='valueAxisFeed' uid="valueAxis" type="Measure" values="Revenue"/>
+																		<viz.feeds:FeedItem id='categoryAxisFeed' uid="categoryAxis" type="Dimension" values="Week"/>
+																	</viz:feeds>
+																</viz:VizFrame>-->
+																<!--	ARJUN CHANGES
+																<viz:VizFrame id="idVizFrameScore1" uiConfig="{applicationSet:'fiori'}"
+																	vizProperties="{dataLabel:{visible:true, showTotal: true},title:{ text:''},categoryAxis: { title: { visible: false } }}" vizType='column'
+																	selectData="_TableNav">
+																	<viz:dataset>
+																		<viz.data:FlattenedDataset data="{bevModel2Name>/}">
+																			<viz.data:dimensions>
+																				<viz.data:DimensionDefinition name="Title" value="{bevModel2Name>Message}"/>
+																				<viz.data:DimensionDefinition name="Title2" value="{bevModel2Name>Materialgr}"/>
+																			</viz.data:dimensions>
+																			<viz.data:measures>
+																				<viz.data:MeasureDefinition name="Year 1" value="{bevModel2Name>QunYear1}"/>
+																				<viz.data:MeasureDefinition name="Year 2" value="{bevModel2Name>QunYear2}"/>
+																				<viz.data:MeasureDefinition name="Year 3" value="{bevModel2Name>QunYear3}"/>
+																			</viz.data:measures>
+																		</viz.data:FlattenedDataset>
+																	</viz:dataset>
+																	<viz:feeds>
+																		<viz.feeds:FeedItem id='valueAxisFeed' uid="valueAxis" type="Measure" values="Year 1,Year 2,Year 3"/>
+																		<viz.feeds:FeedItem id='categoryAxisFeed' uid="categoryAxis" type="Dimension" values="Title"/>
+																		<viz.feeds:FeedItem id='categoryAxisFeed2' uid="categoryAxis" type="Dimension" values="Title2"/>
+																	</viz:feeds>
+																</viz:VizFrame>-->
+																<viz:VizFrame xmlns="sap.viz" id="idVizFrameScore1"></viz:VizFrame>
+															</C:content>
+														</C:ChartContainerContent>
+													</C:content>
+													<C:dimensionSelectors>
+														<MultiComboBox id="IdItem1" showSecondaryValues="true" width="40%" items="{ path: 'PQMatModel>/' }" selectionChange="onSelectChange"
+															selectionFinish="onSelectFinish">
+															<core:ListItem key="{PQMatModel>Mvgr1}" text="{PQMatModel>Bezei}" additionalText="{PQMatModel>Mvgr1}"/>
+														</MultiComboBox>
+														<!--<Button id="idBtn1" text="Go" press="getRecordsPQ" type="Emphasized"/>-->
+													</C:dimensionSelectors>
+												</C:ChartContainer>
+											</layout:contentAreas>
+										</layout:Splitter>
+									</f:content>
+								</f:Card>
+								<f:Card class="sapUiSmallMargin">
+									<f:header>
+										<card:Header title="Efficiency Analytics"/>
+									</f:header>
+									<f:content>
+										<layout:Splitter width="100%" height="100%">
+											<layout:contentAreas>
+												<C:ChartContainer id="chartContainer1" showFullScreen="true" showPersonalization="false" autoAdjustHeight="false" showZoom="false"
+													showLegendButton="true" personalizationPress="attachPersonalizationPress" contentChange="attachContentChange">
+													<C:content>
+														<C:ChartContainerContent icon="sap-icon://line-chart" validateFieldGroup="_TableNav1">
+															<C:content>
+																<viz:VizFrame xmlns="sap.viz" id="idVizFrameScore2"></viz:VizFrame>
+															</C:content>
+														</C:ChartContainerContent>
+													</C:content>
+													<C:dimensionSelectors>
+														<MultiComboBox id="IdItem2" selectionChange="onSelectChange" width="40%" items="{WERKS_MODEL>/}" selectionFinish="onSelectFinish">
+															<core:ListItem key="{WERKS_MODEL>Arbpl}" text="{WERKS_MODEL>Arbpl}"/>
+														</MultiComboBox>
+														<!--<Button id="idBtn2" text="Go" press="getRecordsEF" type="Emphasized"/>-->
+														<!--<Select id="idSelector1" change="handleSelectionChange" name="state1">-->
+														<!--	<core:Item key="line1" text="Line 1"/>-->
+														<!--	<core:Item key="line2" text="Line 2"/>-->
+														<!--</Select>-->
+													</C:dimensionSelectors>
+												</C:ChartContainer>
+											</layout:contentAreas>
+										</layout:Splitter>
+									</f:content>
+								</f:Card>
+								<f:Card class="sapUiSmallMargin">
+									<f:header>
+										<card:Header title="Prod Yield Analytics"/>
+									</f:header>
+									<f:content>
+										<layout:Splitter width="100%" height="100%">
+											<layout:contentAreas>
+												<C:ChartContainer id="chartContainer2" showFullScreen="true" showPersonalization="false" autoAdjustHeight="false" showZoom="false"
+													showLegendButton="true" personalizationPress="attachPersonalizationPress" contentChange="attachContentChange">
+													<C:content>
+														<C:ChartContainerContent icon="sap-icon://line-chart">
+															<C:content>
+																<viz:VizFrame id="idVizFrameScore3" uiConfig="{applicationSet:'fiori'}" vizProperties="{dataLabel:{ showTotal: true},title:{ text:''}}"
+																	vizType='line' selectData="_TableNav">
+																	<viz:dataset>
+																		<viz.data:FlattenedDataset data="{prd_yieldModel2Name>/Line_yield_Rejection}">
+																			<viz.data:dimensions>
+																				<viz.data:DimensionDefinition name="Date" value="{prd_yieldModel2Name>Date}"/>
+																			</viz.data:dimensions>
+																			<viz.data:measures>
+																				<viz.data:MeasureDefinition name="Reject percentage" value="{prd_yieldModel2Name>Rejectpercentage}"/>
+																				<!--<viz.data:MeasureDefinition name="Sum of Line Efficiency 2" value="{bev_LineModel2Name>SumofLineEfficiency2}"/>-->
+																			</viz.data:measures>
+																		</viz.data:FlattenedDataset>
+																	</viz:dataset>
+																	<viz:feeds>
+																		<viz.feeds:FeedItem id="values112" uid="valueAxis" type="Measure" values="Reject percentage"/>
+																		<!--<viz.feeds:FeedItem id="values12" uid="valueAxis2" type="Measure" values="Sum of Line Efficiency 2"/>-->
+																		<viz.feeds:FeedItem uid="categoryAxis" type="Dimension" values="Date"/>
+																	</viz:feeds>
+																</viz:VizFrame>
+																<!--<viz:VizFrame id="chartContainerVizFrame1" vizProperties="{ title: {text : '', visible : true}}" width="100%"-->
+																<!--	uiConfig="{applicationSet:'fiori'}" selectData="_TableNav1"></viz:VizFrame>-->
+															</C:content>
+														</C:ChartContainerContent>
+													</C:content>
+													<C:dimensionSelectors>
+														<MultiComboBox id="IdItem3" showSecondaryValues="true" width="40%" items="{ path: 'PYMatModel>/' }" selectionChange="onMGChange"
+															selectionFinish="onSelectFinish">
+															<core:ListItem key="{PYMatModel>Matkl}" text="{PYMatModel>Wgbez}" additionalText="{PYMatModel>Matkl}"/>
+														</MultiComboBox>
+														<MultiComboBox id="IdItem4" showSecondaryValues="true" selectionChange="onSelectChange" width="40%" items="{path:'MAT_MODEL>/'}"
+															selectionFinish="onSelectFinish">
+															<core:ListItem key="{MAT_MODEL>Matnr}" text="{MAT_MODEL>Matnr}" additionalText="{MAT_MODEL>Maktx}"/>
+														</MultiComboBox>
+														<ToggleButton id="idBtn3" text="Search with Material Group" icon="sap-icon://check-availability" press="searchMatGrp" type="Emphasized"/>
+														<!--<viz:VizFrame id="chartContainerVizFrame2" vizProperties="{ title: {text : 'Line Yield', visible : true}}" width="100%"-->
+														<!--	uiConfig="{applicationSet:'fiori'}"></viz:VizFrame>-->
+													</C:dimensionSelectors>
+												</C:ChartContainer>
+											</layout:contentAreas>
+										</layout:Splitter>
+									</f:content>
+								</f:Card>
+								<f:Card class="sapUiSmallMargin">
+									<f:header>
+										<card:Header title="Reason"/>
+									</f:header>
+									<f:content>
+										<layout:Splitter width="100%" height="100%">
+											<layout:contentAreas>
+												<C:ChartContainer id="chartContainer5" showFullScreen="true" showPersonalization="false" autoAdjustHeight="true" showZoom="false"
+													showLegendButton="true" personalizationPress="attachPersonalizationPress" contentChange="attachContentChange">
+													<C:content>
+														<C:ChartContainerContent icon="sap-icon://line-chart">
+															<C:content>
+																<viz:VizFrame id="idVizFrameScore22222" uiConfig="{applicationSet:'fiori'}" vizProperties="{dataLabel:{ showTotal: true},title:{ text:''}}"
+																	vizType='line' selectData="_TableNav">
+																	<viz:dataset>
+																		<viz.data:FlattenedDataset data="{brkDwn_analyticsModel2Name>/Breakdown}">
+																			<viz.data:dimensions>
+																				<viz.data:DimensionDefinition name="Row Labels" value="{brkDwn_analyticsModel2Name>RowLabels}"/>
+																			</viz.data:dimensions>
+																			<viz.data:measures>
+																				<viz.data:MeasureDefinition name="Sum of Time Hr" value="{brkDwn_analyticsModel2Name>SumofTimeHr}"/>
+																				<!--<viz.data:MeasureDefinition name="Sum of Line Efficiency 2" value="{bev_LineModel2Name>SumofLineEfficiency2}"/>-->
+																			</viz.data:measures>
+																		</viz.data:FlattenedDataset>
+																	</viz:dataset>
+																	<viz:feeds>
+																		<viz.feeds:FeedItem id="values112222" uid="valueAxis" type="Measure" values="Sum of Time Hr"/>
+																		<!--<viz.feeds:FeedItem id="values12" uid="valueAxis2" type="Measure" values="Sum of Line Efficiency 2"/>-->
+																		<viz.feeds:FeedItem uid="categoryAxis" type="Dimension" values="Row Labels"/>
+																	</viz:feeds>
+																</viz:VizFrame>
+																<!--<viz:VizFrame id="chartContainerVizFrame5" vizProperties="{ title: {text : 'Sum of Time HR', visible : true}}" width="100%"-->
+																<!--	uiConfig="{applicationSet:'fiori'}"></viz:VizFrame>-->
+															</C:content>
+														</C:ChartContainerContent>
+													</C:content>
+													<C:dimensionSelectors>
+														<MultiComboBox id="IdItemtt" selectionChange="onSelectChange" width="40%" items="">
+															<core:Item key="line1" text="Line 1"/>
+															<core:Item key="line2" text="Line 2"/>
+															<core:Item key="line3" text="Line 3"/>
+															<core:Item key="lin41" text="Line51"/>
+															<core:Item key="linevc2" text="Linev 2"/>
+														</MultiComboBox>
+													</C:dimensionSelectors>
+												</C:ChartContainer>
+											</layout:contentAreas>
+										</layout:Splitter>
+									</f:content>
+								</f:Card>
+								<f:Card class="sapUiSmallMargin">
+									<f:header>
+										<card:Header title="Rejection Analytics"/>
+									</f:header>
+									<f:content>
+										<VBox class="sapUiSmallMargin" justifyContent="SpaceBetween">
+											<HBox justifyContent="SpaceBetween">
+												<ComboBox id="IdItem5" selectionChange="onSelLineCombItem" width="80%" items="">
+													<core:Item key="line1" text="Line 1"/>
+													<core:Item key="line2" text="Line 2"/>
+													<core:Item key="line3" text="Line 3"/>
+												</ComboBox>
+												<ComboBox id="IdItem6" selectionChange="onSelLineCombItem" width="80%" items="">
+													<core:Item key="line1" text="Line 1"/>
+													<core:Item key="line2" text="Line 2"/>
+													<core:Item key="line3" text="Line 3"/>
+												</ComboBox>
+											</HBox>
+											<Table id="idProductsTable" inset="false" items="{rej_analyticsModel2Name>/Line_yield_Rejection}" mode="SingleSelectMaster"
+												selectionChange="itemTableSelectionChange" class="sapUiSizeCompact">
+												<!--<headerToolbar>-->
+												<!--	<OverflowToolbar>-->
+												<!--		<ComboBox id="idLineComboBox122" selectionChange="onSelLineCombItem" width="40%" items="">-->
+												<!--			<core:Item key="line1" text="Line 1"/>-->
+												<!--			<core:Item key="line2" text="Line 2"/>-->
+												<!--			<core:Item key="line3" text="Line 3"/>-->
+												<!--		</ComboBox>-->
+												<!--	</OverflowToolbar>-->
+												<!--</headerToolbar>-->
+												<columns>
+													<Column>
+														<Text text="Date"/>
+													</Column>
+													<Column minScreenWidth="Tablet" demandPopin="true">
+														<Text text="Material Number"/>
+													</Column>
+													<Column minScreenWidth="Desktop" demandPopin="true">
+														<Text text="Reject"/>
+													</Column>
+													<Column minScreenWidth="Desktop" demandPopin="true">
+														<Text text="Reject percentage"/>
+													</Column>
+													<!--<Column hAlign="End">-->
+													<!--	<Text text="Price"/>-->
+													<!--</Column>-->
+												</columns>
+												<items>
+													<ColumnListItem>
+														<cells>
+															<Text text="{rej_analyticsModel2Name>Date}"/>
+															<Text text="{rej_analyticsModel2Name>MaterialNumber}"/>
+															<Text text="{rej_analyticsModel2Name>Reject}"/>
+															<Text text="{rej_analyticsModel2Name>Rejectpercentage}"/>
+														</cells>
+													</ColumnListItem>
+												</items>
+											</Table>
+										</VBox>
+										<!--<layout:Splitter width="100%" height="100%">-->
+										<!--	<layout:contentAreas>-->
+										<!--		<C:ChartContainer id="chartContainer3" showFullScreen="true" showPersonalization="false" autoAdjustHeight="false" showZoom="false"-->
+										<!--			showLegendButton="false" personalizationPress="attachPersonalizationPress" contentChange="attachContentChange">-->
+										<!--			<C:content>-->
+										<!--				<C:ChartContainerContent icon="sap-icon://line-chart">-->
+										<!--					<C:content>-->
+										<!--						<viz:VizFrame id="idVizFrameScore222" uiConfig="{applicationSet:'fiori'}" vizProperties="{dataLabel:{ showTotal: true},title:{ text:''}}"-->
+										<!--							vizType='line' selectData="_TableNav">-->
+										<!--							<viz:dataset>-->
+										<!--								<viz.data:FlattenedDataset data="{rej_analyticsModel2Name>/Line_yield_Rejection}">-->
+										<!--									<viz.data:dimensions>-->
+										<!--										<viz.data:DimensionDefinition name="Date" value="{rej_analyticsModel2Name>Date}"/>-->
+										<!--									</viz.data:dimensions>-->
+										<!--									<viz.data:measures>-->
+										<!--										<viz.data:MeasureDefinition name="Reject percentage" value="{rej_analyticsModel2Name>Rejectpercentage}"/>-->
+										<!--										<viz.data:MeasureDefinition name="Sum of Line Efficiency 2" value="{bev_LineModel2Name>SumofLineEfficiency2}"/>-->
+										<!--									</viz.data:measures>-->
+										<!--								</viz.data:FlattenedDataset>-->
+										<!--							</viz:dataset>-->
+										<!--							<viz:feeds>-->
+										<!--								<viz.feeds:FeedItem id="values1122" uid="valueAxis" type="Measure" values="Reject percentage"/>-->
+										<!--								<viz.feeds:FeedItem id="values12" uid="valueAxis2" type="Measure" values="Sum of Line Efficiency 2"/>-->
+										<!--								<viz.feeds:FeedItem uid="categoryAxis" type="Dimension" values="Date"/>-->
+										<!--							</viz:feeds>-->
+										<!--						</viz:VizFrame>-->
+										<!--						<viz:VizFrame id="chartContainerVizFrame3" vizProperties="{ title: {text : 'Line Rejection', visible : true}}" width="100%"-->
+										<!--							uiConfig="{applicationSet:'fiori'}"></viz:VizFrame>-->
+										<!--					</C:content>-->
+										<!--				</C:ChartContainerContent>-->
+										<!--			</C:content>-->
+										<!--			<C:dimensionSelectors>-->
+										<!--				<MultiComboBox id="idLineComboBox12" selectionChange="onSelLineCombItem" width="40%" items="">-->
+										<!--					<core:Item key="line1" text="Line 1"/>-->
+										<!--					<core:Item key="line2" text="Line 2"/>-->
+										<!--					<core:Item key="line3" text="Line 3"/>-->
+										<!--				</MultiComboBox>-->
+										<!--			</C:dimensionSelectors>-->
+										<!--		</C:ChartContainer>-->
+										<!--	</layout:contentAreas>-->
+										<!--</layout:Splitter>-->
+									</f:content>
+								</f:Card>
+								<f:Card class="sapUiSmallMargin">
+									<f:header>
+										<card:Header title="Breakdown Analytics"/>
+									</f:header>
+									<f:content>
+										<Table id="idProductsTable1" inset="false" items="{bdAnalyticsModel2Name>/results}" mode="SingleSelectMaster"
+											selectionChange="itemTableSelectionChange" class="sapUiSizeCompact">
+											<columns>
+												<Column>
+													<Text text="Posting Date"/>
+												</Column>
+												<Column minScreenWidth="Tablet" demandPopin="true">
+													<Text text="Work Centre"/>
+												</Column>
+												<Column minScreenWidth="Desktop" demandPopin="true" hAlign="End">
+													<Text text="Reason"/>
+												</Column>
+												<!--<Column minScreenWidth="Desktop" demandPopin="true" hAlign="Center">-->
+												<!--	<Text text="UOM"/>-->
+												<!--</Column>-->
+												<!--<Column hAlign="End">-->
+												<!--	<Text text="Price"/>-->
+												<!--</Column>-->
+											</columns>
+											<items>
+												<ColumnListItem>
+													<cells>
+														<Text text="{bdAnalyticsModel2Name>PostingDate}"/>
+														<Text text="{bdAnalyticsModel2Name>WorkCenter}"/>
+														<Text text="{bdAnalyticsModel2Name>Reason}"/>
+														<!--<Text text="{bdAnalyticsModel2Name>UOM}"/>-->
+													</cells>
+												</ColumnListItem>
+											</items>
+										</Table>
+										<!--<layout:Splitter width="100%" height="100%">-->
+										<!--	<layout:contentAreas>-->
+										<!--		<C:ChartContainer id="chartContainer4" showFullScreen="true" showPersonalization="false" autoAdjustHeight="false" showZoom="false"-->
+										<!--			showLegendButton="false" personalizationPress="attachPersonalizationPress" contentChange="attachContentChange">-->
+										<!--			<C:content>-->
+										<!--				<C:ChartContainerContent icon="sap-icon://line-chart">-->
+										<!--					<C:content>-->
+										<!--						<viz:VizFrame id="idVizFrameScore2222" uiConfig="{applicationSet:'fiori'}" vizProperties="{dataLabel:{ showTotal: true},title:{ text:''}}"-->
+										<!--							vizType='line' selectData="_TableNav">-->
+										<!--							<viz:dataset>-->
+										<!--								<viz.data:FlattenedDataset data="{brkDwn_analyticsModel2Name>/Breakdown}">-->
+										<!--									<viz.data:dimensions>-->
+										<!--										<viz.data:DimensionDefinition name="Row Labels" value="{brkDwn_analyticsModel2Name>RowLabels}"/>-->
+										<!--									</viz.data:dimensions>-->
+										<!--									<viz.data:measures>-->
+										<!--										<viz.data:MeasureDefinition name="Sum of Time Hr" value="{brkDwn_analyticsModel2Name>SumofTimeHr}"/>-->
+										<!--<viz.data:MeasureDefinition name="Sum of Line Efficiency 2" value="{bev_LineModel2Name>SumofLineEfficiency2}"/>-->
+										<!--									</viz.data:measures>-->
+										<!--								</viz.data:FlattenedDataset>-->
+										<!--							</viz:dataset>-->
+										<!--							<viz:feeds>-->
+										<!--								<viz.feeds:FeedItem id="values11222" uid="valueAxis" type="Measure" values="Sum of Time Hr"/>-->
+										<!--<viz.feeds:FeedItem id="values12" uid="valueAxis2" type="Measure" values="Sum of Line Efficiency 2"/>-->
+										<!--								<viz.feeds:FeedItem uid="categoryAxis" type="Dimension" values="Row Labels"/>-->
+										<!--							</viz:feeds>-->
+										<!--						</viz:VizFrame>-->
+										<!--<viz:VizFrame id="chartContainerVizFrame4" vizProperties="{ title: {text : 'Sum of Time HR', visible : true}}" width="100%"-->
+										<!--	uiConfig="{applicationSet:'fiori'}"></viz:VizFrame>-->
+										<!--					</C:content>-->
+										<!--				</C:ChartContainerContent>-->
+										<!--			</C:content>-->
+										<!--			<C:dimensionSelectors>-->
+										<!--				<MultiComboBox id="idLineComboBox122" selectionChange="onSelLineCombItem" width="40%" items="">-->
+										<!--					<core:Item key="line1" text="Line 1"/>-->
+										<!--					<core:Item key="line2" text="Line 2"/>-->
+										<!--					<core:Item key="line3" text="Line 3"/>-->
+										<!--				</MultiComboBox>-->
+										<!--			</C:dimensionSelectors>-->
+										<!--		</C:ChartContainer>-->
+										<!--	</layout:contentAreas>-->
+										<!--</layout:Splitter>-->
+									</f:content>
+								</f:Card>
+							</uxap:ObjectPageSubSection>
+						</uxap:subSections>
+					</uxap:ObjectPageSection>
+				</uxap:sections>
+			</uxap:ObjectPageLayout>
+		</pages>
+	</App>
+</mvc:View>
