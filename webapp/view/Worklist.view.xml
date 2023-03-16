@@ -171,7 +171,8 @@
 															selectionFinish="onSelectFinish">
 															<core:ListItem key="{MAT_MODEL>Matnr}" text="{MAT_MODEL>Matnr}" additionalText="{MAT_MODEL>Maktx}"/>
 														</MultiComboBox>
-														<ToggleButton id="idBtn3" text="Search with Material Group" icon="sap-icon://check-availability" press="searchMatGrp" type="Emphasized"/>
+														<Button id="idBtn3" text="Search with Material Group" icon="sap-icon://check-availability" press="onSearchWithMatGrp" type="Emphasized"/>
+														<Button id="idBtn4" text="Search with Material Group by materials" icon="sap-icon://check-availability" press="onSearchWithMat" type="Emphasized"/>
 														<!--<viz:VizFrame id="chartContainerVizFrame2" vizProperties="{ title: {text : 'Line Yield', visible : true}}" width="100%"-->
 														<!--	uiConfig="{applicationSet:'fiori'}"></viz:VizFrame>-->
 													</C:dimensionSelectors>

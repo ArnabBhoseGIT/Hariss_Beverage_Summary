@@ -46,19 +46,26 @@ sap.ui.define([
 				},
 				error: function (response) {}
 			});
+			this.getMaterialGroups();
+
+		},
+		getMaterialGroups: function () {
+			var that = this;
 			this.getOwnerComponent().getModel().read("/PYMaterialGroupSet", {
 				success: function (data) {
 					var PYMatModel = new JSONModel(data.results);
 					that.getView().setModel(PYMatModel, "PYMatModel");
-					if (data.results.length > 4) {
+					if (data.results.length > 4 && that.getView().byId("IdItem4").getVisible() === true) {
 						that.getView().byId("IdItem3").setSelectedKeys([data.results[0].Matkl, data.results[1].Matkl, data.results[2].Matkl, data.results[
 							3].Matkl]);
-						that.onMGChange();
+					} else {
+						that.getView().byId("IdItem3").setSelectedKeys(data.results[0].Matkl);
 					}
+					that.onMGChange();
+
 				},
 				error: function (response) {}
 			});
-
 		},
 		/*	1. This function invokes automatically when the user changes anything in Plant Dropdown */
 		onWerksChange: function (oEvent) {
@@ -94,18 +101,50 @@ sap.ui.define([
 				});
 			}
 		},
+		onSelectChangeM: function (oEvent) {
+			var Items = oEvent.getSource().getSelectedItems();
+			if (oEvent.getSource().getId().includes("IdItem3") && this.getView().byId("IdItem4").getVisible() === false && Items.length > 1) {
+				oEvent.getSource().setValueState("Error");
+				oEvent.getSource().removeSelectedItem(Items[Items.length - 1]);
+				oEvent.getSource().setValueStateText("Please Select 1 Item only in case of search by Material group");
+			}
+			if (oEvent.getSource().getId().includes("IdItem3") && this.getView().byId("IdItem4").getVisible() === true && Items.length > 4) {
+				oEvent.getSource().setValueState("Error");
+				oEvent.getSource().removeSelectedItem(Items[Items.length - 1]);
+				oEvent.getSource().setValueStateText("Please Select 4 Items only");
+			} else {
+				oEvent.getSource().setValueState("None");
+				oEvent.getSource().setValueStateText("");
+			}
+		},
+		onSearchWithMatGrp: function () {
+			this.getView().byId("IdItem4").setVisible(false);
+			this.getMaterialGroups();
+		},
+		onSearchWithMat: function () {
+			this.getView().byId("IdItem4").setVisible(true);
+			this.getMaterialGroups();
+		},
 		/*	1. This function invokes automatically when the user changes anything in MaterialGroup Dropdown in Card 3*/
 		onMGChange: function (oEvent) {
 			var MGKeys = this.getView().byId("IdItem3").getSelectedKeys(),
-				that = this;
-			if (MGKeys.length > 4) {
-				var Items = this.getView().byId("IdItem3").getSelectedItems();
+				that = this,
+				Items;
+			if (this.getView().byId("IdItem4").getVisible() === true && MGKeys.length > 4) {
+				Items = this.getView().byId("IdItem3").getSelectedItems();
 				this.getView().byId("IdItem3").setValueState("Error");
 				this.getView().byId("IdItem3").setValueStateText("Please Select 4 Items only");
+				this.getView().byId("IdItem3").removeSelectedItem(Items[Items.length - 1]);
+			} else if (this.getView().byId("IdItem4").getVisible() === false && MGKeys.length > 1) {
+				Items = this.getView().byId("IdItem3").getSelectedItems();
+				this.getView().byId("IdItem3").setValueState("Error");
+				this.getView().byId("IdItem3").setValueStateText("Please Select 1 Item only");
 				this.getView().byId("IdItem3").removeSelectedItem(Items[Items.length - 1]);
 			} else {
 				this.getView().byId("IdItem3").setValueState("None");
 				this.getView().byId("IdItem3").setValueStateText("");
+
+				//	if (this.getView().byId("IdItem4").getVisible() === true) {
 				var MGfilters = [];
 				for (var i = 0; i < MGKeys.length; i++) {
 					var aFilter = new sap.ui.model.Filter("Matkl", sap.ui.model.FilterOperator.EQ, MGKeys[i]);
@@ -121,11 +160,14 @@ sap.ui.define([
 						var MatModel = new JSONModel(data.results);
 						MatModel.setSizeLimit(data.results.length);
 						that.getView().setModel(MatModel, "MAT_MODEL");
-						if (!oEvent) {
-							that.getRecordsPY();
-						}
+						//	if (!oEvent) {
+						that.getRecordsPY();
+						//	}
 					}
 				});
+				/*	} else {
+						that.getRecordsPY();
+					}*/
 			}
 		},
 		/*	1. This is will be triggered when Go is clicked on Filter Bar, Validation is implemented 
@@ -371,19 +413,37 @@ sap.ui.define([
 		/*	1.This function will get the filters from the above function and calls the backend to get the data for Card3*/
 		getRecordsPY: function () {
 			var that = this;
-			var PYFilters = this.getFilters("Plant", "PyYear", "Useropt");
-			var oSelected2 = this.getView().byId("IdItem4").getSelectedItems();
-			var Card3filters = [];
-			for (var k = 0; k < oSelected2.length; k++) {
-				var aFilter3 = new sap.ui.model.Filter("MaterialNo", sap.ui.model.FilterOperator.EQ, oSelected2[k].getKey());
-				Card3filters.push(aFilter3);
+			var PYFilters = this.getFilters("Plant", "PyYear", "Useropt"),
+				oSelected2, sURL;
+			if (this.getView().byId("IdItem4").getVisible() === true) {
+				oSelected2 = this.getView().byId("IdItem4").getSelectedItems();
+				var Card3filters = [];
+				for (var k = 0; k < oSelected2.length; k++) {
+					var aFilter3 = new sap.ui.model.Filter("MaterialNo", sap.ui.model.FilterOperator.EQ, oSelected2[k].getKey());
+					Card3filters.push(aFilter3);
+				}
+				var Card3Filter = new sap.ui.model.Filter({
+					filters: Card3filters,
+					and: false
+				});
+				PYFilters.push(Card3Filter);
+				sURL = "/PYCardSet";
+			} else {
+				var Card3filters2 = [];
+				oSelected2 = this.getView().byId("IdItem3").getSelectedItems();
+				for (var l = 0; l < oSelected2.length; l++) {
+					var aFilter3A = new sap.ui.model.Filter("MaterialGr", sap.ui.model.FilterOperator.EQ, oSelected2[l].getKey());
+					Card3filters2.push(aFilter3A);
+				}
+				var Card3FilterA = new sap.ui.model.Filter({
+					filters: Card3filters2,
+					and: false
+				});
+				PYFilters.push(Card3FilterA);
+				PYFilters.shift();
+				sURL = "/PYCardByMatGrpSet";
 			}
-			var Card3Filter = new sap.ui.model.Filter({
-				filters: Card3filters,
-				and: false
-			});
-			PYFilters.push(Card3Filter);
-			this.getOwnerComponent().getModel().read("/PYCardSet", {
+			this.getOwnerComponent().getModel().read(sURL, {
 				filters: PYFilters,
 				success: function (data) {
 					if (data.results.length > 0) {
@@ -544,6 +604,7 @@ sap.ui.define([
 			var that = this;
 			var oVizFrame = that.getView().byId("idVizFrameScore3"),
 				oVizModel = new sap.ui.model.json.JSONModel(ChartData);
+			oVizModel.setSizeLimit(ChartData.length);
 			that.getView().setModel(oVizModel, "PYChartModel");
 			oVizFrame.destroyFeeds();
 			oVizFrame.destroyDataset();
