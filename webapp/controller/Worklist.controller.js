@@ -118,8 +118,41 @@ sap.ui.define([
 			}
 		},
 		onSearchWithMatGrp: function () {
+			if (this.getView().byId("idBtn3").getPressed()) {
+				this.getView().byId("IdItem4").setVisible(false);
+				this.getMaterialGroups();
+				var TimePeriod = this.getView().byId("combo2").getSelectedKey();
+				if (TimePeriod === "QT") {
+					this.getView().byId("IdItem6").setVisible(true);
+					this.getView().byId("IdItem5").setVisible(false);
+				} else if (TimePeriod === "MT") {
+					this.getView().byId("IdItem5").setVisible(true);
+					this.getView().byId("IdItem6").setVisible(false);
+				} else {
+					this.getView().byId("IdItem5").setVisible(false);
+					this.getView().byId("IdItem6").setVisible(false);
+				}
+				this.getView().byId("idBtn3").setText("Search with Material Group by material");
+			} else {
+				this.getView().byId("IdItem4").setVisible(true);
+				this.getMaterialGroups();
+				this.getView().byId("IdItem5").setVisible(false);
+				this.getView().byId("IdItem6").setVisible(false);
+				this.getView().byId("idBtn3").setText("Search with Material Group");
+			}
+		},
+		onSearchWithMatGrp1: function () {
 			this.getView().byId("IdItem4").setVisible(false);
 			this.getMaterialGroups();
+			var TimePeriod = this.getView().byId("combo2").getSelectedKey();
+			if (TimePeriod === "QT") {
+				this.getView().byId("IdItem6").setVisible(false);
+				this.getView().byId("IdItem5").setVisible(true);
+			}
+			if (TimePeriod === "MT") {
+				this.getView().byId("IdItem5").setVisible(true);
+				this.getView().byId("IdItem6").setVisible(false);
+			}
 		},
 		onSearchWithMat: function () {
 			this.getView().byId("IdItem4").setVisible(true);
@@ -414,7 +447,7 @@ sap.ui.define([
 		getRecordsPY: function () {
 			var that = this;
 			var PYFilters = this.getFilters("Plant", "PyYear", "Useropt"),
-				oSelected2, sURL;
+				oSelected2, sURL, TimeFilter;
 			if (this.getView().byId("IdItem4").getVisible() === true) {
 				oSelected2 = this.getView().byId("IdItem4").getSelectedItems();
 				var Card3filters = [];
@@ -441,14 +474,25 @@ sap.ui.define([
 				});
 				PYFilters.push(Card3FilterA);
 				PYFilters.shift();
+				var TimePeriod = this.getView().byId("combo2").getSelectedKey(),
+					Month = this.getView().byId("IdItem5").getSelectedKey(),
+					Quarter = this.getView().byId("IdItem6").getSelectedKey();
+				if (TimePeriod === "QT") {
+					TimeFilter = new sap.ui.model.Filter("PyQuarter", sap.ui.model.FilterOperator.EQ, Quarter);
+					PYFilters.push(TimeFilter);
+				}
+				if (TimePeriod === "MT") {
+					TimeFilter = new sap.ui.model.Filter("PyMonth", sap.ui.model.FilterOperator.EQ, Month);
+					PYFilters.push(TimeFilter);
+				}
 				sURL = "/PYCardByMatGrpSet";
 			}
 			this.getOwnerComponent().getModel().read(sURL, {
 				filters: PYFilters,
 				success: function (data) {
-					if (data.results.length > 0) {
-						that.implementPYChart(data.results);
-					}
+					//	if (data.results.length > 0) {
+					that.implementPYChart(data.results);
+					//	}
 				},
 				error: function (response) {}
 			});
@@ -609,70 +653,85 @@ sap.ui.define([
 			oVizFrame.destroyFeeds();
 			oVizFrame.destroyDataset();
 			oVizFrame.setModel(oVizModel);
+			if (ChartData) {
+				var oDataset = new sap.viz.ui5.data.FlattenedDataset({
+					dimensions: [{
+						name: "Time Period",
+						value: "{PYChartModel>Message}"
+					}, {
+						name: "Material",
+						value: "{PYChartModel>MaterialDetails}"
+					}],
+					measures: [{
+						name: ChartData[0].Year1,
+						value: "{PYChartModel>PyYear1}"
+					}, {
+						name: ChartData[0].Year2,
+						value: "{PYChartModel>PyYear2}"
+					}, {
+						name: ChartData[0].Year3,
+						value: "{PYChartModel>PyYear3}"
+					}],
+					data: {
+						path: "PYChartModel>/"
+					}
+				});
+				oVizFrame.setDataset(oDataset);
+				oVizFrame.setModel(oVizModel);
+				oVizFrame.setVizType("column");
 
-			var oDataset = new sap.viz.ui5.data.FlattenedDataset({
-				dimensions: [{
-					name: "Title",
-					value: "{PYChartModel>Message}"
-				}, {
-					name: "Title 2",
-					value: "{PYChartModel>MaterialNo}"
-				}],
+				var feedValueAxis1 = new sap.viz.ui5.controls.common.feeds.FeedItem({
+					"uid": "valueAxis",
+					"type": "Measure",
+					"values": [ChartData[0].Year1]
+				});
+				var feedCategoryAxis1 = new sap.viz.ui5.controls.common.feeds.FeedItem({
+					"uid": "categoryAxis",
+					"type": "Dimension",
+					"values": ["Time Period"]
+				});
+				var feedCategoryAxis2 = new sap.viz.ui5.controls.common.feeds.FeedItem({
+					"uid": "categoryAxis",
+					"type": "Dimension",
+					"values": ["Material"]
+				});
+				var feedValueAxis2 = new sap.viz.ui5.controls.common.feeds.FeedItem({
+					"uid": "valueAxis",
+					"type": "Measure",
+					"values": [ChartData[0].Year2]
+				});
+				var feedValueAxis3 = new sap.viz.ui5.controls.common.feeds.FeedItem({
+					"uid": "valueAxis",
+					"type": "Measure",
+					"values": [ChartData[0].Year3]
+				});
+				this.setVizProperties(oVizFrame, "Prod Yield Analytics", "Production Yield");
+			
 
-				measures: [{
-					name: ChartData[0].Year1,
-					value: "{PYChartModel>PyYear1}"
-				}, {
-					name: ChartData[0].Year2,
-					value: "{PYChartModel>PyYear2}"
-				}, {
-					name: ChartData[0].Year3,
-					value: "{PYChartModel>PyYear3}"
-				}],
-				data: {
-					path: "PYChartModel>/"
+				oVizFrame.addFeed(feedValueAxis1);
+				oVizFrame.addFeed(feedCategoryAxis1);
+				oVizFrame.addFeed(feedCategoryAxis2);
+				if (ChartData[0].Year2 !== "0000") {
+					oVizFrame.addFeed(feedValueAxis2);
 				}
-			});
-			oVizFrame.setDataset(oDataset);
-			oVizFrame.setModel(oVizModel);
-			oVizFrame.setVizType("column");
-
-			var feedValueAxis1 = new sap.viz.ui5.controls.common.feeds.FeedItem({
-				"uid": "valueAxis",
-				"type": "Measure",
-				"values": [ChartData[0].Year1]
-			});
-			var feedCategoryAxis1 = new sap.viz.ui5.controls.common.feeds.FeedItem({
-				"uid": "categoryAxis",
-				"type": "Dimension",
-				"values": ["Title"]
-			});
-			var feedCategoryAxis2 = new sap.viz.ui5.controls.common.feeds.FeedItem({
-				"uid": "categoryAxis",
-				"type": "Dimension",
-				"values": ["Title 2"]
-			});
-			var feedValueAxis2 = new sap.viz.ui5.controls.common.feeds.FeedItem({
-				"uid": "valueAxis",
-				"type": "Measure",
-				"values": [ChartData[0].Year2]
-			});
-			var feedValueAxis3 = new sap.viz.ui5.controls.common.feeds.FeedItem({
-				"uid": "valueAxis",
-				"type": "Measure",
-				"values": [ChartData[0].Year3]
-			});
-			this.setVizProperties(oVizFrame, "Prod Yield Analytics", "Production Yield");
-			oVizFrame.addFeed(feedValueAxis1);
-			oVizFrame.addFeed(feedCategoryAxis1);
-			oVizFrame.addFeed(feedCategoryAxis2);
-			if (ChartData[0].Year2 !== "0000") {
-				oVizFrame.addFeed(feedValueAxis2);
-			}
-			if (ChartData[0].Year3 !== "0000") {
-				oVizFrame.addFeed(feedValueAxis3);
+				if (ChartData[0].Year3 !== "0000") {
+					oVizFrame.addFeed(feedValueAxis3);
+				}
 			}
 		},
+		// Define the tooltip formatter function
+		tooltipFormatter: function (oEvent) {
+			var tooltipText = "";
+			var data = oEvent.getParameter("data");
+			var category = data.data.Category;
+			var value = data.data.Value;
+
+			tooltipText += "Category: " + category + "<br/>";
+			tooltipText += "Value: " + value + "<br/>";
+
+			return tooltipText;
+		},
+
 		setVizProperties: function (VizId, ChartTitle, YaxisLabel) {
 			VizId.setVizProperties({
 				plotArea: {
@@ -740,6 +799,10 @@ sap.ui.define([
 				oEvent.getSource().setValueState("None");
 				oEvent.getSource().setValueStateText("");
 			}
+			this.getRecordsPY();
+		},
+		onSelectChange1: function (oEvent) {
+			this.getRecordsPY();
 		},
 		/*This Function Triggers when the user selection is finished and the drop-down is closed*/
 		onSelectFinish: function (oEvent) {
@@ -754,8 +817,11 @@ sap.ui.define([
 			if (Id.includes("Item2")) {
 				this.getRecordsEF();
 			}
-			if (Id.includes("Item3") || Id.includes("Item4")) {
+			if (Id.includes("Item3") || Id.includes("Item4") || Id.includes("Item5") || Id.includes("Item6")) {
 				this.getRecordsPY();
+			}
+			if (Id.includes("combo2")) {
+				this.onSearchWithMatGrp();
 			}
 		},
 		itemTableSelectionChange: function (oEvent) {

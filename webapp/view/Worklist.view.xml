@@ -171,8 +171,30 @@
 															selectionFinish="onSelectFinish">
 															<core:ListItem key="{MAT_MODEL>Matnr}" text="{MAT_MODEL>Matnr}" additionalText="{MAT_MODEL>Maktx}"/>
 														</MultiComboBox>
-														<Button id="idBtn3" text="Search with Material Group" icon="sap-icon://check-availability" press="onSearchWithMatGrp" type="Emphasized"/>
-														<Button id="idBtn4" text="Search with Material Group by materials" icon="sap-icon://check-availability" press="onSearchWithMat" type="Emphasized"/>
+														<ComboBox id="IdItem5" visible="false" showSecondaryValues="true" selectionChange="onSelectChange1" width="40%">
+															<core:ListItem key="01" text="January"/>
+															<core:ListItem key="02" text="February"/>
+															<core:ListItem key="03" text="March"/>
+															<core:ListItem key="04" text="April"/>
+															<core:ListItem key="05" text="May"/>
+															<core:ListItem key="06" text="June"/>
+															<core:ListItem key="07" text="July"/>
+															<core:ListItem key="08" text="August"/>
+															<core:ListItem key="09" text="September"/>
+															<core:ListItem key="10" text="October"/>
+															<core:ListItem key="11" text="November"/>
+															<core:ListItem key="12" text="December"/>
+														</ComboBox>
+														<ComboBox id="IdItem6" visible="false" showSecondaryValues="true" selectionChange="onSelectChange1" width="40%">
+															<core:ListItem key="Q1" text="1st Quarter"/>
+															<core:ListItem key="Q2" text="2nd Quarter"/>
+															<core:ListItem key="Q3" text="3rd Quarter"/>
+															<core:ListItem key="Q4" text="4th Quarter"/>
+														</ComboBox>
+														<ToggleButton id="idBtn3" text="Search with Material Group" icon="sap-icon://check-availability" press="onSearchWithMatGrp"
+															type="Emphasized"/>
+														<!--	<Button id="idBtn4" text="Search with Material Group by materials" icon="sap-icon://check-availability" press="onSearchWithMat"
+															type="Emphasized"/>-->
 														<!--<viz:VizFrame id="chartContainerVizFrame2" vizProperties="{ title: {text : 'Line Yield', visible : true}}" width="100%"-->
 														<!--	uiConfig="{applicationSet:'fiori'}"></viz:VizFrame>-->
 													</C:dimensionSelectors>
@@ -238,12 +260,12 @@
 									<f:content>
 										<VBox class="sapUiSmallMargin" justifyContent="SpaceBetween">
 											<HBox justifyContent="SpaceBetween">
-												<ComboBox id="IdItem5" selectionChange="onSelLineCombItem" width="80%" items="">
+												<ComboBox id="IdItemgd6" selectionChange="onSelLineCombItem" width="80%" items="">
 													<core:Item key="line1" text="Line 1"/>
 													<core:Item key="line2" text="Line 2"/>
 													<core:Item key="line3" text="Line 3"/>
 												</ComboBox>
-												<ComboBox id="IdItem6" selectionChange="onSelLineCombItem" width="80%" items="">
+												<ComboBox id="IdItgdgem6" selectionChange="onSelLineCombItem" width="80%" items="">
 													<core:Item key="line1" text="Line 1"/>
 													<core:Item key="line2" text="Line 2"/>
 													<core:Item key="line3" text="Line 3"/>
